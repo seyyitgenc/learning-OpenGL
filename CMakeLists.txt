@@ -12,7 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 if(WIN32)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)    
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)    
 endif(WIN32)
 
 
@@ -22,12 +22,12 @@ endif(WIN32)
 find_package(OpenGL REQUIRED)
 # GLM
 find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
+message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
 
 
 # GLFW3
 find_package(GLFW3 REQUIRED)
-message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIR}")
+message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIRS}")
 
 if(APPLE)
     find_package(Freetype REQUIRED)
@@ -55,7 +55,8 @@ set(1.getting_started
     1.1.triangle
     4.1.textures
     4.2.textures_combined
-    5.1.transformations)
+    5.1.transformations
+    5.2.coordinate_system)
 
 
 add_library(STB_IMAGE "src/stb_image.cpp")
@@ -64,12 +65,20 @@ set(LIBS ${LIBS} STB_IMAGE)
 add_library(GLAD "src/glad.c")
 set(LIBS ${LIBS} GLAD)
 
+# copy resources folder
+file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_SOURCE_DIR}/build)
+file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_SOURCE_DIR}/build)
+
+# copy shader folder
+
 function(create_project_from_sources chapter demo)
     
     # copy source files
     file(GLOB SOURCE
             "src/${chapter}/${demo}/*.h"
             "src/${chapter}/${demo}/*.cpp"
+            "src/${chapter}/${demo}/*.vs"
+            "src/${chapter}/${demo}/*.fs"
     )
     if(demo STREQUAL "")
         set(replaced "")
@@ -80,25 +89,24 @@ function(create_project_from_sources chapter demo)
     add_executable(${NAME} ${SOURCE})
     target_link_libraries(${NAME} ${LIBS})
     if(WIN32)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}")
-        set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}/Debug")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${chapter}")
+        set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${chapter}/Debug")
     elseif(UNIX AND NOT APPLE)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${chapter}")
     endif(WIN32)
     
-    # copy shader files to build directory
-    file(GLOB SHADERS
-        "src/${chapter}/${demo}/*.vs"
-        "src/${chapter}/${demo}/*.fs"
-    )
-    foreach(SHADER ${SHADERS})
-        if(WIN32)
-        # configure_file(${SHADER} "test")
-            add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${NAME}>)
-        elseif(UNIX AND NOT APPLE)
-            file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${chapter})
-        endif(WIN32)
-    endforeach(SHADER)
+    # # copy shader files to build directory
+    # file(GLOB SHADERS
+    #     "src/${chapter}/${demo}/*.vs"
+    #     "src/${chapter}/${demo}/*.fs"
+    # )
+    # foreach(SHADER ${SHADERS})
+    #     if(WIN32)
+    #         add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${NAME}>)
+    #     elseif(UNIX AND NOT APPLE)
+    #         file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${chapter})
+    #     endif(WIN32)
+    # endforeach(SHADER)
 endfunction()
 
 # create a project file per tutorial

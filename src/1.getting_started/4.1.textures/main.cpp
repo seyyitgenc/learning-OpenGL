@@ -1,15 +1,12 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <openglapp/shader.h>
+#include <stb_image.h>
 
 #include <cmath>
 #include <filesystem>
 #include <iostream>
-
-#include <stb_image.h>
-#include <openglapp/shader.h>
-
-
 
 void framebuffer_size_callback(GLFWwindow *window, int w, int h) { glViewport(0, 0, w, h); }
 
@@ -18,6 +15,8 @@ void processInput(GLFWwindow *window) {
 }
 
 int main(int argc, char **argv) {
+    // getting absoulte file path
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -64,7 +63,7 @@ int main(int argc, char **argv) {
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, bordercolor);
 
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("../resources/textures/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("resources/textures/container.jpg", &width, &height, &nrChannels, 0);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -105,7 +104,13 @@ int main(int argc, char **argv) {
     // glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     // std::cout << "max nr of vertex attrib. supported : " << nrAttributes << std::endl;
 
-    Shader triangle("../bin/1.getting_started/4.1.shader.vs", "../bin/1.getting_started/4.1.shader.fs");
+    // zort
+
+    //! FIXME :  path is changing due to relative path
+    // note use filesystem library 
+    // !! IF USER EXECUTING EXE FILE FROM BUILD DIRECTORY THIS WILL BE THE PATH
+    // !! BUT IF USER EXECUTING EXE FILE FROM WHERE EXE IS LOCATED PATH WILL BE ../shaders/4.1.texture.vs LATER ON I WILL FIX IT 
+    Shader triangle("shaders/4.1.texture.vs", "shaders/4.1.texture.fs");
     // main loop
     while (!glfwWindowShouldClose(window)) {
         // input
