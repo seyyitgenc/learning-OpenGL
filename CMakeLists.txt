@@ -49,15 +49,21 @@ else()
 endif(WIN32)
 
 set(CHAPTERS
-    1.getting_started)
+    1.getting_started
+    2.lighting)
 
 set(1.getting_started
     1.1.triangle
     4.1.textures
     4.2.textures_combined
     5.1.transformations
-    5.2.coordinate_system)
+    6.1.coordinate_system
+    7.1.camera
+    )
 
+set(2.lighting
+    1.colors
+    )
 
 add_library(STB_IMAGE "src/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)

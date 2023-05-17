@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
     // OpenGl wireframe mode by default it's GL_FILL
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    Shader texture("shaders/5.2.coordinates.vs", "shaders/5.2.coordinates.fs");
+    Shader texture("shaders/6.1.coordinates.vs", "shaders/6.1.coordinates.fs");
     // main loop
     texture.use();
     texture.setInt("texture1", 0);
@@ -193,7 +193,10 @@ int main(int argc, char **argv) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            if (i % 3 == 0) {
+                angle = (float)glfwGetTime() * 25.0f;
+            }
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 1.0f));
             texture.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
