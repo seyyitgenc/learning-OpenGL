@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
     // note use filesystem library 
     // !! IF USER EXECUTING EXE FILE FROM BUILD DIRECTORY THIS WILL BE THE PATH
     // !! BUT IF USER EXECUTING EXE FILE FROM WHERE EXE IS LOCATED PATH WILL BE ../shaders/4.1.texture.vs LATER ON I WILL FIX IT 
-    Shader triangle("shaders/4.1.texture.vs", "shaders/4.1.texture.fs");
+    Shader triangle("shaders/1.getting_started/4.1.texture.vs", "shaders/1.getting_started/4.1.texture.fs");
     // main loop
     while (!glfwWindowShouldClose(window)) {
         // input

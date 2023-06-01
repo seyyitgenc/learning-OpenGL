@@ -63,8 +63,19 @@ set(1.getting_started
 
 set(2.lighting
     1.colors
+    2.1.basic_lighting_ambient
+    2.2.basic_lighting_diffuse
+    2.3.materials
+    2.4.maps
+    2.5.directional_light
+    2.6.point_light
+    2.7.spot_light
+    2.8.multiple_lights
     )
 
+configure_file(configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/configuration)
+    
 add_library(STB_IMAGE "src/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)
 

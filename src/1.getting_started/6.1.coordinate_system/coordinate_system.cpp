@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
     // OpenGl wireframe mode by default it's GL_FILL
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    Shader texture("shaders/6.1.coordinates.vs", "shaders/6.1.coordinates.fs");
+    Shader texture("shaders/1.getting_started/6.1.coordinates.vs", "shaders/1.getting_started/6.1.coordinates.fs");
     // main loop
     texture.use();
     texture.setInt("texture1", 0);

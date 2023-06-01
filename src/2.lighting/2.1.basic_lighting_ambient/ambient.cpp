@@ -121,9 +121,8 @@ int main(int argc, char **argv) {
     // OpenGl wireframe mode by default it's GL_FILL
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    Shader lightingShader("shaders/2.lighting/1.1.colors.vs", "shaders/2.lighting/1.1.colors.fs");
+    Shader lightingShader("shaders/2.lighting/2.1.ambient.vs", "shaders/2.lighting/2.1.ambient.fs");
     Shader lightCubeShader("shaders/2.lighting/light_cube.vs", "shaders/2.lighting/light_cube.fs");
-    // main loop
 
     glEnable(GL_DEPTH_TEST);
 

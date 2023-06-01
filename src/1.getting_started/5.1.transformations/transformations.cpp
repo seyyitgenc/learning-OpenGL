@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
 
     glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
 
-    Shader texture("shaders/5.1.transform.vs", "shaders/5.1.transform.fs");
+    Shader texture("shaders/1.getting_started/5.1.transform.vs", "shaders/1.getting_started/5.1.transform.fs");
     // main loop
     texture.use();
     texture.setInt("texture1", 0);

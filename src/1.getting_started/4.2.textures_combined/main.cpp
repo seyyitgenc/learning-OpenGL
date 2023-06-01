@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
     // glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     // std::cout << "max nr of vertex attrib. supported : " << nrAttributes << std::endl;
 
-    Shader triangle("4.2.shader.vs", "4.2.shader.fs");
+    Shader triangle("shaders/1.getting_started/4.2.shader.vs", "shaders/1.getting_started/4.2.shader.fs");
     // main loop
     triangle.use();
     triangle.setInt("texture1", 0);

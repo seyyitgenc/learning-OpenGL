@@ -63,9 +63,12 @@ public:
     // void compute
     void setMovementSpeed(float movementSpeed) { m_movementSpeed = movementSpeed; }
     void setMouseSensivity(float mouseSensivity) { m_mouseSensivity = mouseSensivity; }
+
     float getMovementSpeed() { return m_movementSpeed; }
     float getMouseSensivity() { return m_mouseSensivity; }
-
+    glm::vec3 getFront() { return m_cameraFront; }
+    void setPosition(glm::vec3 newPos) { m_cameraPosition = newPos; }
+    glm::vec3 getPosition() { return m_cameraPosition; }
     glm::mat4 getViewMatrix() { return glm::lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, m_cameraUp); }
 
 private:
@@ -80,6 +83,7 @@ private:
         m_cameraUp = glm::normalize(glm::cross(m_cameraRight, m_cameraFront));
     }
     // camera attributes
+
 private:
     bool m_firstMouse = true;
     float lastX, lastY;
