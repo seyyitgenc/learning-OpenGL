@@ -5,6 +5,8 @@
 #include <openglapp/filesystem.h>
 #include <openglapp/shader.h>
 #include <stb_image.h>
+#include <assimp/Importer.hpp>
+
 
 // GLM Libs
 #include <glm/glm.hpp>

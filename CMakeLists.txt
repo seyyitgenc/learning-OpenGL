@@ -5,7 +5,8 @@ project(openglapp)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
-
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 #if build type is not defined then use debug
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)")
@@ -22,9 +23,10 @@ endif(WIN32)
 find_package(OpenGL REQUIRED)
 # GLM
 find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIRS}")
+message(STATUS "Found GLM in ${GLM_INCLUDE_DIRS}")
 
-
+find_package(assimp REQUIRED)
+message(STATUS "Found assimp in ${ASSIMP_INCLUDE_DIRS}")
 # GLFW3
 find_package(GLFW3 REQUIRED)
 message(STATUS "Found GLFW3 in ${GLFW3_INCLUDE_DIRS}")
@@ -35,14 +37,14 @@ if(APPLE)
 endif(APPLE)
 
 if(WIN32)
-    set(LIBS glfw3 opengl32 freetype)
+    set(LIBS glfw3 opengl32 freetype ${ASSIMP_LIBRARIES})
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 elseif(UNIX AND NOT APPLE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
     find_package(OpenGL REQUIRED)
     add_definitions(${OPENGL_DEFINITIONS})
     find_package(X11 REQUIRED)
-    set(LIBS ${GLFW3_LIBRARY} X11 Xrandr Xinerema Xi Xxf86vm Xcursor GL dl pthread freetype)
+    set(LIBS ${GLFW3_LIBRARY} X11 Xrandr Xinerema Xi Xxf86vm Xcursor GL dl pthread freetype ${ASSIMP_LIBRARIES})
     set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
 else()
     set(LIBS)
@@ -50,7 +52,9 @@ endif(WIN32)
 
 set(CHAPTERS
     1.getting_started
-    2.lighting)
+    2.lighting
+    3.model_loading
+    )
 
 set(1.getting_started
     1.1.triangle
@@ -73,6 +77,9 @@ set(2.lighting
     2.8.multiple_lights
     )
 
+set(3.model_loading
+    3.1.model_loading
+    )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
     
