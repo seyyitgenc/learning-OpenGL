@@ -54,6 +54,7 @@ set(CHAPTERS
     1.getting_started
     2.lighting
     3.model_loading
+    4.advanced_opengl
     )
 
 set(1.getting_started
@@ -79,6 +80,16 @@ set(2.lighting
 
 set(3.model_loading
     3.1.model_loading
+    )
+set(4.advanced_opengl
+    4.1.depth_testing
+    4.2.stencil_testing
+    4.3.blending
+    4.3.blending-func
+    4.4.face_culling
+    4.5.frame_buffers
+    4.6.post_processing
+    4.7.skybox
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)

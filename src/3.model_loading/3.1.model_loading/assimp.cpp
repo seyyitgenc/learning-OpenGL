@@ -95,8 +95,11 @@ int main(int argc, char **argv) {
 
     Shader ourShader("shaders/3.model_loading/1.model_loading.vs", "shaders/3.model_loading/1.model_loading.fs");
     Shader lightCubeShader("shaders/2.lighting/light_cube.vs", "shaders/2.lighting/light_cube.fs");
+    Shader shaderSingleColor("shaders/3.model_loading/1.model_loading.vs", "shaders/4.advanced_opengl/1.1.stencil_border.fs");
 
     Model backPack(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glEnable(GL_STENCIL_TEST);
     while (!glfwWindowShouldClose(window)) {
         // input
         // ----
@@ -105,12 +108,16 @@ int main(int argc, char **argv) {
         lastFrame = currentFrame;
         processInput(window);
 
+        glEnable(GL_DEPTH_TEST);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glStencilMask(0x00);
 
-        // don't forget to enable shader before setting uniforms
         ourShader.use();
-
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)800 / (float)600, 0.1f, 100.0f);
         glm::mat4 view = camera.getViewMatrix();
@@ -125,26 +132,45 @@ int main(int argc, char **argv) {
         ourShader.setFloat("shininess", 32);
 
         ourShader.setVec3("light.position", glm::vec3(-3.0f, 1.0f, 2.0f));
-        glm::vec3 diffuseColor = glm::vec3(1.0f) * glm::vec3(1.0f);
+        glm::vec3 diffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
         ourShader.setVec3("light.ambient", ambientColor);
         ourShader.setVec3("light.diffuse", diffuseColor);
-        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("light.specular", glm::vec3(1));
         ourShader.setFloat("light.constant", 1.0f);
-        ourShader.setFloat("light.linear", 0.0009f);
+        ourShader.setFloat("light.linear", 0.009f);
         ourShader.setFloat("light.quadratic", 0.032f);
-
         backPack.Draw(ourShader);
 
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-3.0f, 1.0f, 2.0f));
-        lightCubeShader.use();
-        lightCubeShader.setMat4("model", model);
-        lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);
+        // borders
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+        shaderSingleColor.use();
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));      // it's a bit too big for our scene, so scale it down
+        shaderSingleColor.setMat4("projection", projection);
+        shaderSingleColor.setMat4("view", view);
+
+        shaderSingleColor.setMat4("model", model);
+        shaderSingleColor.setVec3("viewPos", camera.getPosition());
+        shaderSingleColor.setFloat("shininess", 32);
+
+        shaderSingleColor.setVec3("light.position", glm::vec3(-3.0f, 1.0f, 2.0f));
+        shaderSingleColor.setVec3("light.ambient", ambientColor);
+        shaderSingleColor.setVec3("light.diffuse", diffuseColor);
+        shaderSingleColor.setVec3("light.specular", glm::vec3(1));
+        shaderSingleColor.setFloat("light.constant", 1.0f);
+        shaderSingleColor.setFloat("light.linear", 0.009f);
+        shaderSingleColor.setFloat("light.quadratic", 0.032f);
+        backPack.Draw(shaderSingleColor);
+
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -154,10 +180,10 @@ int main(int argc, char **argv) {
 
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeybord(CAMERA_FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeybord(CAMERA_BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeybord(CAMERA_LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeybord(CAMERA_RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(CAMERA_FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(CAMERA_BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(CAMERA_LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(CAMERA_RIGHT, deltaTime);
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) { camera.processMouseScrool(xoffset, yoffset); }

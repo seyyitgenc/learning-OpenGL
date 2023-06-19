@@ -25,7 +25,7 @@ public:
         updateCameraVectors();
     }
     ~Camera() = default;
-    void processKeybord(Camera_Movement direction, float deltaTime) {
+    void processKeyboard(Camera_Movement direction, float deltaTime) {
         float velocity = m_movementSpeed * deltaTime;
         if (direction == CAMERA_FORWARD) m_cameraPosition += m_cameraFront * velocity;
         if (direction == CAMERA_BACKWARD) m_cameraPosition -= m_cameraFront * velocity;
