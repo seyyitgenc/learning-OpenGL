@@ -13,7 +13,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 if(WIN32)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)    
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin) 
 endif(WIN32)
 
 
@@ -93,7 +93,6 @@ set(4.advanced_opengl
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
-    
 add_library(STB_IMAGE "src/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)
 
@@ -101,8 +100,8 @@ add_library(GLAD "src/glad.c")
 set(LIBS ${LIBS} GLAD)
 
 # copy resources folder
-file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_SOURCE_DIR}/build)
-file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_SOURCE_DIR}/build)
+file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_SOURCE_DIR}/bin)
 
 # copy shader folder
 
@@ -124,10 +123,16 @@ function(create_project_from_sources chapter demo)
     add_executable(${NAME} ${SOURCE})
     target_link_libraries(${NAME} ${LIBS})
     if(WIN32)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${chapter}")
-        set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${chapter}/Debug")
+        if(CMAKE_BUILD_TYPE MATCHES Debug)
+            set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/debug/${chapter}")
+            set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/debug/{chapter}")
+        elseif(CMAKE_BUILD_TYPE MATCHES Release)
+            set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/release/${chapter}")
+            set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/release/${chapter}")
+        endif(CMAKE_BUILD_TYPE MATCHES Debug)
+
     elseif(UNIX AND NOT APPLE)
-        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/${chapter}")
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${chapter}")
     endif(WIN32)
     
     # # copy shader files to build directory
