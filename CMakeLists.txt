@@ -90,6 +90,15 @@ set(4.advanced_opengl
     4.5.frame_buffers
     4.6.post_processing
     4.7.skybox
+    4.8.glsl_ubo
+    4.9.geometry_shader
+    4.10.normal_visualization
+    4.11.instancing
+    4.12.instanced_arrays
+    4.13.asteroids
+    4.14.instanced_asteroids
+    4.15.msaa
+    4.16.msaa_background
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)

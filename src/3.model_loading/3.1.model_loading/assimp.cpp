@@ -18,7 +18,10 @@ const float screenHeight = 600;
 
 Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
 
-void framebuffer_size_callback(GLFWwindow *window, int w, int h) { glViewport(0, 0, w, h); }
+void framebuffer_size_callback(GLFWwindow *window, int w, int h)
+{
+    glViewport(0, 0, w, h);
+}
 void processInput(GLFWwindow *window);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void mouse_callback(GLFWwindow *window, double xoffset, double yoffset);
@@ -30,14 +33,16 @@ float lastFrame = 0.0f;
 // ----------------
 // main function
 // ----------------
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow *window = glfwCreateWindow(screenWidth, screenHeight, "Hello OpenGL", NULL, NULL);
-    if (window == NULL) {
+    if (window == NULL)
+    {
         printf("Failed to create GLFW window");
         glfwTerminate();
         return EXIT_FAILURE;
@@ -52,7 +57,8 @@ int main(int argc, char **argv) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // initializes pointers for some OPENGL functions
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
         printf("Failed to initialize GLAD");
         return EXIT_FAILURE;
     }
@@ -97,10 +103,11 @@ int main(int argc, char **argv) {
     Shader lightCubeShader("shaders/2.lighting/light_cube.vs", "shaders/2.lighting/light_cube.fs");
     Shader shaderSingleColor("shaders/3.model_loading/1.model_loading.vs", "shaders/4.advanced_opengl/1.1.stencil_border.fs");
 
-    Model backPack(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
+    Model backPack(FileSystem::getPath("resources/objects/nanosuit/nanosuit.obj"));
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glEnable(GL_STENCIL_TEST);
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
         // input
         // ----
         float currentFrame = glfwGetTime();
@@ -125,8 +132,8 @@ int main(int argc, char **argv) {
         ourShader.setMat4("view", view);
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));      // it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));     // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourShader.setVec3("viewPos", camera.getPosition());
         ourShader.setFloat("shininess", 32);
@@ -149,8 +156,8 @@ int main(int argc, char **argv) {
         shaderSingleColor.use();
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));      // it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));  // it's a bit too big for our scene, so scale it down
         shaderSingleColor.setMat4("projection", projection);
         shaderSingleColor.setMat4("view", view);
 
@@ -178,13 +185,25 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.processKeyboard(CAMERA_FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.processKeyboard(CAMERA_BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.processKeyboard(CAMERA_LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.processKeyboard(CAMERA_RIGHT, deltaTime);
+void processInput(GLFWwindow *window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.processKeyboard(CAMERA_FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.processKeyboard(CAMERA_BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.processKeyboard(CAMERA_LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.processKeyboard(CAMERA_RIGHT, deltaTime);
 }
 
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) { camera.processMouseScrool(xoffset, yoffset); }
-void mouse_callback(GLFWwindow *window, double xoffset, double yoffset) { camera.processMouseMovement(xoffset, yoffset); }
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    camera.processMouseScrool(xoffset, yoffset);
+}
+void mouse_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    camera.processMouseMovement(xoffset, yoffset);
+}
