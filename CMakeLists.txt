@@ -55,6 +55,7 @@ set(CHAPTERS
     2.lighting
     3.model_loading
     4.advanced_opengl
+    5.advanced_lighting
     )
 
 set(1.getting_started
@@ -99,6 +100,13 @@ set(4.advanced_opengl
     4.14.instanced_asteroids
     4.15.msaa
     4.16.msaa_background
+    )
+set(5.advanced_lighting
+    5.1.blinn_phong
+    5.2.gamma_correction
+    5.3.1.shadow_mapping_depth
+    5.3.2.shadow_mapping_base
+    5.4.point_shadows
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)

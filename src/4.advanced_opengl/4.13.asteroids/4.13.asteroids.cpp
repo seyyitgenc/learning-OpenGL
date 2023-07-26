@@ -23,13 +23,13 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
+double stepAngle = 0.0;
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
-
+bool pause = false, isPausePressed = false;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -78,16 +78,16 @@ int main()
     Model asteroid(FileSystem::getPath("resources/objects/rock/rock.obj"));
     Model planet(FileSystem::getPath("resources/objects/planet/planet.obj"));
 
-    camera.setMovementSpeed(15);
+    camera.setMovementSpeed(30);
     // render loop
     // -----------
 
-    unsigned int amount = 100000;
+    unsigned int amount = 1000;
     glm::mat4 *modelMatrices;
     modelMatrices = new glm::mat4[amount];
     srand(glfwGetTime());
-    float radius = 150.0;
-    float offset = 26.0f;
+    float radius = 50.0;
+    float offset = 2.5f;
     for (unsigned int i = 0; i < amount; i++)
     {
         glm::mat4 model = glm::mat4(1.0f);
@@ -113,7 +113,8 @@ int main()
         // 4. now add to list of matrices
         modelMatrices[i] = model;
     }
-
+    float time = 0;
+    camera.setPosition(glm::vec3(-10, 0, 0));
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -121,7 +122,7 @@ int main()
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
+        time += deltaTime;
         // input
         // -----
         processInput(window);
@@ -136,21 +137,37 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
 
         // planet
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));     // it's a bit too big for our scene, so scale it down
         shader.use();
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
         model = glm::translate(model, glm::vec3(0.0, -3.0, 0.0));
-        model = glm::scale(model, glm::vec3(4.0, 4.0, 4.0));
+        model = glm::scale(model, glm::vec3(3.0, 3.0, 3.0));
         shader.setMat4("model", model);
         planet.Draw(shader);
 
         // asteroids
         for (size_t i = 0; i < amount; i++)
         {
+            if (!pause)
+            {
+                float test = (2 * 3.14 * 1 * stepAngle) / 360;
+                float originX = 0, originY = 0;
+                float x = originX + cos(stepAngle) * 0.1;
+                float y = originY + sin(stepAngle) * 0.1;
+                /* code */
+                modelMatrices[i] = glm::translate(modelMatrices[i], glm::vec3(test, 0, test));
+            }
             shader.setMat4("model", modelMatrices[i]);
             asteroid.Draw(shader);
+        }
+        if (time > 2)
+        {
+            stepAngle += 1;
+            time = 0;
+            if (stepAngle > 360)
+                stepAngle = 0;
+            if (stepAngle < 0)
+                stepAngle = 0;
         }
 
         glfwSwapBuffers(window);
@@ -177,6 +194,15 @@ void processInput(GLFWwindow *window)
         camera.processKeyboard(CAMERA_LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.processKeyboard(CAMERA_RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !isPausePressed)
+    {
+        pause = !pause;
+        isPausePressed = true;
+    }
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE)
+    {
+        isPausePressed = false;
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback

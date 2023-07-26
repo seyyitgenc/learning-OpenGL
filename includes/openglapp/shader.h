@@ -22,6 +22,7 @@ class Shader
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
+    void setDouble(const std::string &name, double value) const;
     void setMat4(const std::string &name, glm::mat4 value) const;
     void setVec3(const std::string &name, float x, float y, float z) const;
     void setVec3(const std::string &name, glm::vec3 value) const;
@@ -217,6 +218,10 @@ inline void Shader::setInt(const std::string &name, int value) const
 inline void Shader::setFloat(const std::string &name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+inline void Shader::setDouble(const std::string &name, double value) const
+{
+    glUniform1d(glGetUniformLocation(ID, name.c_str()), value);
 }
 inline void Shader::setMat4(const std::string &name, glm::mat4 value) const
 {
