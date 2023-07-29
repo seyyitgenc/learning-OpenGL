@@ -1,0 +1,6 @@
+# Apply override to all files in the directory
+special-vendored-path/src/* linguist-vendored
+# Apply override to a specific file
+glad.c -linguist-vendored
+# Apply override to all files and directories in the directory
+ano-dir/** linguist-vendored
