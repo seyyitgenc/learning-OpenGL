@@ -110,10 +110,10 @@ set(5.advanced_lighting
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
-add_library(STB_IMAGE "src/stb_image.cpp")
+add_library(STB_IMAGE "includes/vendor/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)
 
-add_library(GLAD "src/glad.c")
+add_library(GLAD "includes/vendor/glad/glad.c")
 set(LIBS ${LIBS} GLAD)
 
 # copy resources folder
