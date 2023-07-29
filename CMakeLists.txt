@@ -172,4 +172,6 @@ foreach(CHAPTER ${CHAPTERS})
         create_project_from_sources(${CHAPTER} ${DEMO})
     endforeach(DEMO)
 endforeach(CHAPTER)
-include_directories(${CMAKE_SOURCE_DIR}/includes)
+include_directories(${CMAKE_SOURCE_DIR}/includes
+                    ${CMAKE_SOURCE_DIR}/includes/vendor)
+
