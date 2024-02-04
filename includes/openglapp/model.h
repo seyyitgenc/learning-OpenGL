@@ -34,7 +34,8 @@ class Model
     void loadModel(std::string const &path)
     {
         Assimp::Importer import;
-        const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+        const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | 
+                                                         aiProcess_CalcTangentSpace);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
@@ -95,6 +96,16 @@ class Model
                 vec.x = mesh->mTextureCoords[0][i].x;
                 vec.y = mesh->mTextureCoords[0][i].y;
                 vertex.TexCoords = vec;
+                // tangent
+                vector.x = mesh->mTangents[i].x;
+                vector.y = mesh->mTangents[i].y;
+                vector.z = mesh->mTangents[i].z;
+                vertex.Tangent = vector;
+                // bitangent
+                vector.x = mesh->mBitangents[i].x;
+                vector.y = mesh->mBitangents[i].y;
+                vector.z = mesh->mBitangents[i].z;
+                vertex.Bitangent = vector;
             }
             else
                 vertex.TexCoords = glm::vec2(0.0f, 0.0f);
@@ -117,6 +128,10 @@ class Model
             textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
             std::vector specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
             textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+            std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+            textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+            std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+            textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
         }
         return Mesh(vertices, indices, textures);
     };
@@ -150,9 +165,8 @@ class Model
         }
         for (size_t i = 0; i < textures.size(); i++)
         {
-            std::cout << "Texture Loaded >>>> " << textures[i].path << std::endl;
+            std::cout << typeName << " Texture Loaded : " << textures[i].path << std::endl;
         }
-
         return textures;
     };
 };

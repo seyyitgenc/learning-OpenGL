@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     Shader lightCubeShader("shaders/2.lighting/light_cube.vs", "shaders/2.lighting/light_cube.fs");
     Shader shaderSingleColor("shaders/3.model_loading/1.model_loading.vs", "shaders/4.advanced_opengl/1.1.stencil_border.fs");
 
-    Model backPack(FileSystem::getPath("resources/objects/nanosuit/nanosuit.obj"));
+    Model backPack(FileSystem::getPath("resources/objects/nanaosuit/nanosuit.obj"));
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glEnable(GL_STENCIL_TEST);
     while (!glfwWindowShouldClose(window))
@@ -134,6 +134,9 @@ int main(int argc, char **argv)
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));     // it's a bit too big for our scene, so scale it down
+        model = glm::rotate(
+            model, glm::radians((float)glfwGetTime() * -10.0f),
+            glm::normalize(glm::vec3(1.0, 1.0, 0.0))); // rotate the quad to show normal mapping from multiple directions
         ourShader.setMat4("model", model);
         ourShader.setVec3("viewPos", camera.getPosition());
         ourShader.setFloat("shininess", 32);

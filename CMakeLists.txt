@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 project(openglapp)
 
@@ -46,8 +46,6 @@ elseif(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     set(LIBS ${GLFW3_LIBRARY} X11 Xrandr Xinerema Xi Xxf86vm Xcursor GL dl pthread freetype ${ASSIMP_LIBRARIES})
     set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -ldl")
-else()
-    set(LIBS)
 endif(WIN32)
 
 set(CHAPTERS
@@ -107,6 +105,10 @@ set(5.advanced_lighting
     5.3.1.shadow_mapping_depth
     5.3.2.shadow_mapping_base
     5.4.point_shadows
+    5.5.1.normal_mapping
+    5.5.2.normal_mapping_model
+    5.6.1.parallax_mapping
+    5.6.2.steep_parallax_mapping
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
@@ -116,11 +118,12 @@ set(LIBS ${LIBS} STB_IMAGE)
 add_library(GLAD "includes/vendor/glad/glad.c")
 set(LIBS ${LIBS} GLAD)
 
+
 # copy resources folder
 file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+# copy shader folder
 file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_SOURCE_DIR}/bin)
 
-# copy shader folder
 
 function(create_project_from_sources chapter demo)
     

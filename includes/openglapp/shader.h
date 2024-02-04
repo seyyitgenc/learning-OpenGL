@@ -2,8 +2,6 @@
 #include <glad/glad.h>
 
 #include <fstream>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <sstream>
@@ -188,8 +186,10 @@ inline Shader::Shader(const char *vertexPath, const char *geometryPath, const ch
 
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
-    glAttachShader(ID, geometry);
+    glLinkProgram(ID);
     glAttachShader(ID, fragment);
+    glLinkProgram(ID);
+    glAttachShader(ID, geometry);
     glLinkProgram(ID);
     // print linking errors if any
     glGetProgramiv(ID, GL_LINK_STATUS, &success);
