@@ -105,6 +105,7 @@ set(5.advanced_lighting
     5.3.1.shadow_mapping_depth
     5.3.2.shadow_mapping_base
     5.4.point_shadows
+    5.5.hdr
     5.5.1.normal_mapping
     5.5.2.normal_mapping_model
     5.6.1.parallax_mapping
