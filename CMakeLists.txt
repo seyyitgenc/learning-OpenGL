@@ -110,6 +110,7 @@ set(5.advanced_lighting
     5.5.2.normal_mapping_model
     5.6.1.parallax_mapping
     5.6.2.steep_parallax_mapping
+    5.7.bloom
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
