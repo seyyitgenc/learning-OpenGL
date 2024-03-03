@@ -2,11 +2,13 @@ cmake_minimum_required(VERSION 3.5)
 
 project(openglapp)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 #if build type is not defined then use debug
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)")
@@ -111,6 +113,8 @@ set(5.advanced_lighting
     5.6.1.parallax_mapping
     5.6.2.steep_parallax_mapping
     5.7.bloom
+    5.8.deferred_shading
+    5.9.deferred_shading_volume
     )
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)

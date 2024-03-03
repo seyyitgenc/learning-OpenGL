@@ -157,7 +157,7 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
 
         ourShader.use();
-        glm::translate(model, glm::vec3(0, 0, 0));
+        model = glm::translate(model, glm::vec3(0, 0, 0));
         // model = glm::rotate(
         //     model, glm::radians((float)glfwGetTime() * -10.0f),
         //     glm::normalize(glm::vec3(1.0, 1.0, 0.0))); // rotate the quad to show normal mapping from multiple directions

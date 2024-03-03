@@ -165,7 +165,7 @@ class Model
         }
         for (size_t i = 0; i < textures.size(); i++)
         {
-            std::cout << typeName << " Texture Loaded : " << textures[i].path << std::endl;
+            std::cout << typeName << " Texture Loaded : " << directory << std::endl;
         }
         return textures;
     };
